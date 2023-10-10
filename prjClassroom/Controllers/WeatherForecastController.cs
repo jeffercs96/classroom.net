@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using prjClassroom.Models;
 
 namespace prjClassroom.Controllers;
 
@@ -28,6 +31,39 @@ public class WeatherForecastController : ControllerBase
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
+    }
+
+    [HttpPost]
+    [Route("/delete")]
+    [Authorize]
+    public dynamic deleteWeatherForecast(WeatherForecast weatherForecast)
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+        var rToken = JwtEntity.TokenValidate(identity);
+
+        if(!rToken.success)
+        {
+            return rToken;
+        }
+
+
+        UserEntity user = rToken.result;
+
+        if(user.Role != "Admin")
+        {
+            {
+                return new
+                {
+                    message="You don't have permission for this task"
+                };
+            }
+        }
+
+        return new
+        {
+            message = "Deleted Weather Forecast"
+        };
     }
 }
 

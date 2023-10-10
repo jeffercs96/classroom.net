@@ -10,7 +10,7 @@ using prjClassroom.Models;
 namespace prjClassroom.Controllers
 {
     [ApiController]
-    [Route("[usuario]")]
+    [Route("/usuario")]
     public class UserLogin : ControllerBase
 	{
 		public IConfiguration _configuration;
@@ -20,7 +20,7 @@ namespace prjClassroom.Controllers
 		
 		}
 		[HttpPost]
-		[Route("/login")]
+		[Route("login")]
 		public dynamic IniciarSesion([FromBody] Object fromData)
 		{
 			var data = JsonConvert.DeserializeObject<dynamic>(fromData.ToString());
